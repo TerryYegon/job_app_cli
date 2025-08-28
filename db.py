@@ -1,4 +1,3 @@
-
 import sqlite3
 import json
 from typing import List, Dict, Optional
@@ -30,8 +29,18 @@ class JobApplicationDB:
                     status TEXT DEFAULT 'Pending'
                 )
             ''')
+            cursor.execute('''CREATE TABLE IF NOT EXISTS applications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                full_name TEXT,
+                email TEXT,
+                phone TEXT,
+                position TEXT,
+                years_exp INTEGER,
+                skills TEXT,
+                resume TEXT
+            )''')
             conn.commit()
-            print("Database table 'applicants' ready")
+            print("Database tables 'applicants' and 'applications' ready")
     
     def add_applicant(self, name: str, email: str, phone: str, position: str, 
                      skills: List[str], experience: int, resume_text: str) -> bool:
@@ -48,6 +57,23 @@ class JobApplicationDB:
                 print(f" Added applicant: {name} ({email})")
                 return True
         except sqlite3.IntegrityError as e:
+            print(f"Database error: {e}")
+            return False
+    
+    def save_application(self, full_name: str, email: str, phone: str, position: str, 
+                        years_exp: int, skills: List[str], resume: str) -> bool:
+        """Save applicant data to the applications table"""
+        try:
+            with sqlite3.connect(self.db_name) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO applications (full_name, email, phone, position, years_exp, skills, resume)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ''', (full_name, email, phone, position, years_exp, json.dumps(skills), resume))
+                conn.commit()
+                print(f" Saved application for: {full_name} ({email})")
+                return True
+        except sqlite3.Error as e:
             print(f"Database error: {e}")
             return False
     
@@ -150,3 +176,7 @@ class JobApplicationDB:
                 'total': total,
                 'status_breakdown': status_counts
             }
+
+def save_application_record(full_name, email, phone, position, years_exp, skills, resume):
+    db = JobApplicationDB()
+    db.save_application(full_name, email, phone, position, years_exp, skills, resume)
