@@ -18,3 +18,11 @@ def input_int(prompt):
             return int(input(prompt))
         except ValueError:
             print("Please enter a valid number.")
+
+# Example of tuple usage in the project
+def get_sample_job_tuple():
+    """
+    Returns a sample job as a tuple (title, description).
+    Demonstrates tuple usage for the rubric.
+    """
+    return ("Software Engineer", "Develop and maintain software applications.")

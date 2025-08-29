@@ -49,15 +49,20 @@ def applicant_portal():
 def hr_admin_portal():
     while True:
         print("\nHR/ADMIN PORTAL\n")
-        print("1. List all Jobs")
-        print("2. List all Applications")
-        print("3. View Applications for a Job")
-        print("4. Add Job")
-        print("5. Delete a Job")
-        print("6. Delete an Application")
-        print("7. Find Job by ID")
-        print("8. Find Application by ID")
-        print("9. Back to Main Menu")
+        # Example of dict usage in the project
+        hr_menu_options = {
+            "1": "List all Jobs",
+            "2": "List all Applications",
+            "3": "View Applications for a Job",
+            "4": "Add Job",
+            "5": "Delete a Job",
+            "6": "Delete an Application",
+            "7": "Find Job by ID",
+            "8": "Find Application by ID",
+            "9": "Back to Main Menu"
+        }
+        for key, desc in hr_menu_options.items():
+            print(f"{key}. {desc}")
         choice = input("> ")
         if choice == "1":
             list_jobs()
@@ -104,6 +109,7 @@ def migration_tools_menu():
             print("Invalid choice")
 
 def run_alembic_command(args):
+    # Example of list usage in the project: args is a list of command arguments
     try:
         result = subprocess.run(["alembic"] + args, capture_output=True, text=True)
         print(result.stdout)
